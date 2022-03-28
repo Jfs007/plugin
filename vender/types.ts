@@ -15,7 +15,8 @@ export type ConfigType = {
     routeRewrite?: Function,
     // 文件加载
     fileLoad?: Function
-    // a: string
+    // 模块导入
+    mouduleImport?: Function
  }
 
  export type File = {

@@ -3,7 +3,6 @@
 import { ConfigType  as ConfigType} from '../types';
  
  let config: ConfigType = {
-    // dirname: 'src',
     path: 'src/router/modules',
     include: 'src/page',
     ignoreFilePrefix: '@',
@@ -12,6 +11,7 @@ import { ConfigType  as ConfigType} from '../types';
     format: 'ts',
     routeRewrite: router => router,
     fileLoad: file => file,
+    mouduleImport: (router) => []
 
 }
 

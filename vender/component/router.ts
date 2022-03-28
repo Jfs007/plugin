@@ -15,11 +15,13 @@ export default class Router extends Base {
     isModule: boolean;
     filePath: string;
     chunkName: string;
+    level: number;
     meta: Meta;
     constructor(config) {
         super(config);
         this.name = '';
         this.path = '';
+        this.level = 0;
         this.component = Function();
         this.redirect = '';
         this.filePath = '';
@@ -30,6 +32,7 @@ export default class Router extends Base {
         super.init(config);
     }
     appendChild(Router: Router) {
+        Router.level = this.level+1;
         this.children.push(Router);
     }
 
@@ -41,9 +44,10 @@ export default class Router extends Base {
     }
 
 
-    componentLize() {
-
+    search(router: Router): null|Router {
+        return this.children.find(Crouter => (Crouter.name == router.name));
     }
+
 
     get ingoreSerializeKeys() {
         return ['isModule', 'filePath', 'chunkName'];
@@ -53,7 +57,6 @@ export default class Router extends Base {
     toSerializeValue(value, key): any {
         if(key == 'component') {
             if(typeof value == 'function') {
-                console.log(value, 'value');
                 value = `${value}`;
             }
             return value.replace(/\$Function\((.*)\)/g, (a, b) => { return b });

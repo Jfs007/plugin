@@ -20,9 +20,21 @@ export default class FileBuilt {
     }
     babelCode(code:string):string {
         let newCode = code.replace(/(import|require)\(.*?\)/g, $ => $.toString());
-        console.log(newCode, code);
+        // console.log(newCode, code);
         return newCode;
     }
+
+    moduleImportMerge(moduleLeft:string, modules:Array<string>):Array<string> {
+        console.log(modules, moduleLeft, '---')
+        modules = modules.filter(module => {
+            let moduleName = (module.match(/from\s+['|"](.*?)['|"]/)?.[1]) || '';
+            console.log(moduleName, 'pmoduleName', new RegExp(`import\s+.*from\s+['|"]${moduleName}['|"]`))
+            return <boolean>(!!!(moduleLeft.match(new RegExp(`import\s+.*from\s+['|"]${moduleName}['|"]`))?.[0]))
+        })
+        
+        return [...modules, moduleLeft];
+    }
+    
 
 
     built(routes, config) {
@@ -36,7 +48,6 @@ export default class FileBuilt {
             } else {
                 let moduleLeft: string = '//文件为插件产生 原则上只允许修改路由参数   \n export default ';
                 let routerVar: object | null = null;
-
                 try {
                     if (fs.existsSync(route.filePath + '.' + format)) {
                         let fileValue = await readFile(route.filePath + '.' + format);
@@ -50,10 +61,12 @@ export default class FileBuilt {
                     routerVar = routerVar ? config!.routeRewrite(routerVar) : routerVar;
                     route.merge(routerVar || {});
                     moduleLeft = config?.fileLoad(moduleLeft) || moduleLeft;
+                    let _mouduleImport = config.mouduleImport(route) || {};
+                    moduleLeft = this.moduleImportMerge(moduleLeft, _mouduleImport).join('\n');
                     let code = jsBeautify.js(`${moduleLeft}${route.serialize()}`);
-                    fs.writeFile(route.filePath + '.ts', code, () => { });
+                    fs.writeFile(route.filePath + '.' + format, code, () => { });
                 } catch (error) {
-                    console.info('error-info', error);
+                    
                     return new Error(error)
                 }
             }

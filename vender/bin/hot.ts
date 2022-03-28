@@ -1,5 +1,5 @@
 
-import type { ConfigType, RouteReview  } from '../types';
+import type { ConfigType  } from '../types';
 import FileListenPlugin from '../component/file-listen-plugin';
 import type { Plugin } from 'vite';
 function Run(config?: ConfigType) : Plugin {

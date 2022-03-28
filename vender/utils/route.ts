@@ -13,12 +13,14 @@ let routerFolder = (folder: string, config: ConfigType):string => {
 
 
 export let createRouter = (files: Array<string>, srcDir: string, config: ConfigType) => {
-    let routers = [];
+    let _blankRouter = new Router({
+        name: '_blank'
+    });
     let filePathDir = `${srcDir}/${config.path}/`;
     files.map(file => {
         let folderArray: Array<string> = file.replace(`${srcDir}/${config.include}/`, '').split('/');
         let router: Router = new Router({});
-        let tempVarRouters = routers;
+        let tempVarRouter = _blankRouter;
         let routerFolders: Array<string> = [];
         folderArray.map((folder, level) => {
             routerFolders.push(routerFolder(folder, config));
@@ -38,18 +40,21 @@ export let createRouter = (files: Array<string>, srcDir: string, config: ConfigT
             router.filePath = filePathDir + routerFolders.join('/');
             router.chunkName = `${config.path}/${folderArray.slice(0, level+1).join('/')}/index.vue`;
             router.component = `$Function(() => {  return import('${router.chunkName}')  })`
-            let visAvis = tempVarRouters.find(varRouter => varRouter.name == router.name);
+            let visAvis = tempVarRouter.search(router);
             if (visAvis) {
                 let nextFolder:string = folderArray[level+1] ? routerFolder(folderArray[level+1], config) : '';
                 visAvis.redirect = '/' + routerFolders.join('/') + ( nextFolder ? '/' + nextFolder : '');
                 visAvis.children = visAvis.children || [];
-                tempVarRouters = visAvis.children;
+                tempVarRouter = visAvis;
+            } else {
+                
             }
             
         });
-        tempVarRouters.push(router);
+        tempVarRouter.appendChild(router);
     });
-    return routers;
+    // console.log(util.inspect(_blankRouter.children, { showHidden: true, depth: null }))
+    return _blankRouter.children;
 
 
 }
