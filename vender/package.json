@@ -1,0 +1,13 @@
+{
+  "name": "gen-router",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "devDependencies": {
+    "@babel/core": "^7.17.8",
+    "@babel/generator": "^7.17.7",
+    "@babel/parser": "^7.17.8",
+    "@vue/compiler-sfc": "^3.2.31",
+    "js-beautify": "^1.14.0"
+  }
+}
