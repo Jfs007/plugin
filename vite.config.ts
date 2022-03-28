@@ -1,21 +1,19 @@
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
-
 import hotPlugin from './vender/bin/hot';
-
-// import vender from './src/vender/index.js';
-
-
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [vue(), hotPlugin({}, {
-    routeRewrite(route)  {
-      console.log(route.name, 'rrr');
-      route.component = `$Function(() => import("/v"))`
-      return route;
+  plugins: [vue(), hotPlugin({ 
+    // routeRewrite(route) {
+    //   // console.log(route, 'route');
+    //   route.component = `$Function(() => import("/v"))`
+    //   return route;
+    // },
+    mouduleImport() {
+      return [`import RouterView from '/src/App.vue';`];
     },
-    load(left) {
-      return left
+    fileLoad(left) {
+      return left;
     }
   })]
 })
