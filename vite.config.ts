@@ -14,8 +14,14 @@ export default defineConfig({
     //   route.component = `$Function(() => import("/v"))`
     //   return route;
     // },
-    mouduleImport() {
-      return [`import RouterView from '/src/App.vue';`];
+    mouduleImport(router) {
+      if(router.level == 4) {
+        return ([`import V from 'vite'`])
+      }
+      return ([
+        `import RouterView from '/src/App.vue';`,
+        `import vfly from '/src/page/Module_a';`
+      ]);
     },
     fileLoad(left) {
       return left;

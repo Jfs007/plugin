@@ -38,7 +38,7 @@ export let createRouter = (files: Array<string>, srcDir: string, config: ConfigT
                 path: rPath
             });
             router.filePath = filePathDir + routerFolders.join('/');
-            router.chunkName = `${config.path}/${folderArray.slice(0, level+1).join('/')}/index.vue`;
+            router.chunkName = `${config.include}/${folderArray.slice(0, level+1).join('/')}/index.vue`;
             router.component = `$Function(() => {  return import('${router.chunkName}')  })`
             let visAvis = tempVarRouter.search(router);
             if (visAvis) {

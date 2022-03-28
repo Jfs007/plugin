@@ -28,7 +28,7 @@ export default class FileListenPlugin {
     }
     async run(config: ConfigType) {
         this.config = (<any>Object).assign(defaultConfig, config);
-        this.cwd = process.cwd();
+        this.cwd = process.cwd().replace(/\\/g,"\\");
         let Files = await this.resolveFiles(this.watchFolderPath);
         this.builtRouter(Files);
     }
@@ -39,10 +39,12 @@ export default class FileListenPlugin {
         let isWatch = <boolean>(!!changePath.match(new RegExp(`^${include}`)));
         let includePath = path.replace(`${this.cwd}/${this.config.include}/`, '');
         let pathFolder = path.replace(/(.*)\/.*\..*$/ig, "$1");
+        console.log(pathFolder, isWatch, 'files', include, changePath, '-----------', this.cwd);
         if (isWatch && !this.cache.isCache(pathFolder)) {
             let p = `${this.cwd}/${this.config.include}/${includePath.split('/')[0]}`;
             let Files = await this.resolveFiles(p);
             Files.unshift(p);
+            
         
             this.builtRouter(Files);
         }

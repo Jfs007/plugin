@@ -25,7 +25,6 @@ export default class FileBuilt {
     }
 
     moduleImportMerge(moduleLeft:string, modules:Array<string>):Array<string> {
-        console.log(modules, moduleLeft, '---')
         modules = modules.filter(module => {
             let moduleName = (module.match(/from\s+['|"](.*?)['|"]/)?.[1]) || '';
             return <boolean>(!!!(moduleLeft.match(new RegExp(`import\\s+.*from\\s+['|"]${moduleName}['|"]`))?.[0]))
@@ -69,7 +68,7 @@ export default class FileBuilt {
                     return new Error(error)
                 }
             }
-            if (route.children.length) {
+            if (route.isModule && route.children.length) {
                 this.built(route.children, config);
             }
         })
