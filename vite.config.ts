@@ -6,6 +6,7 @@ import hotPlugin from './vender/bin/hot';
 // gaidong
 
 // nonoe
+// dev2 content
 export default defineConfig({
   plugins: [vue(), hotPlugin({ 
     // routeRewrite(route) {
