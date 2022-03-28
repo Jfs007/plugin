@@ -2,6 +2,7 @@ import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import hotPlugin from './vender/bin/hot';
 // https://vitejs.dev/config/
+// ceshi
 export default defineConfig({
   plugins: [vue(), hotPlugin({ 
     // routeRewrite(route) {
