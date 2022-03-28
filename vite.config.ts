@@ -3,6 +3,7 @@ import vue from '@vitejs/plugin-vue'
 import hotPlugin from './vender/bin/hot';
 // https://vitejs.dev/config/
 // ceshi
+// gaidong
 export default defineConfig({
   plugins: [vue(), hotPlugin({ 
     // routeRewrite(route) {
