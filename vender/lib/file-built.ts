@@ -28,8 +28,7 @@ export default class FileBuilt {
         console.log(modules, moduleLeft, '---')
         modules = modules.filter(module => {
             let moduleName = (module.match(/from\s+['|"](.*?)['|"]/)?.[1]) || '';
-            console.log(moduleName, 'pmoduleName', new RegExp(`import\s+.*from\s+['|"]${moduleName}['|"]`))
-            return <boolean>(!!!(moduleLeft.match(new RegExp(`import\s+.*from\s+['|"]${moduleName}['|"]`))?.[0]))
+            return <boolean>(!!!(moduleLeft.match(new RegExp(`import\\s+.*from\\s+['|"]${moduleName}['|"]`))?.[0]))
         })
         
         return [...modules, moduleLeft];
