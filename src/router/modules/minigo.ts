@@ -5,9 +5,7 @@ export default {
     name: "minigo",
     path: "/minigo",
     redirect: "",
-    component: () => {
-        return import('src/page/minigo/index.vue')
-    },
+    component: RouterView,
     children: [],
     level: 1,
     meta: {}

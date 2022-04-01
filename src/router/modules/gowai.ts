@@ -5,9 +5,7 @@ export default {
     name: "gowai",
     path: "/gowai",
     redirect: "",
-    component: () => {
-        return import('src/page/gowai/index.vue')
-    },
+    component: RouterView,
     children: [],
     level: 1,
     meta: {}

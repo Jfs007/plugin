@@ -5,9 +5,7 @@ export default {
     name: "demo__charts",
     path: "demo/charts",
     redirect: "/demo/charts/e-charts",
-    component: () => {
-        return import('src/page/Module_demo/charts/index.vue')
-    },
+    component: RouterView,
     children: [{
         name: "demo__charts__baidu-map",
         path: "charts/baidu-map",

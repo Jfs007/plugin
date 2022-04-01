@@ -9,11 +9,11 @@ import hotPlugin from './vender/bin/hot';
 // dev2 content
 export default defineConfig({
   plugins: [vue(), hotPlugin({ 
-    // routeRewrite(route) {
-    //   // console.log(route, 'route');
-    //   route.component = `$Function(() => import("/v"))`
-    //   return route;
-    // },
+    routeRewrite(route) {
+      // console.log(route, 'route');
+      route.component = `RouterView`
+      return route;
+    },
     mouduleImport(router) {
       if(router.level == 4) {
         return ([`import V from 'vite'`])

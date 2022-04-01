@@ -5,9 +5,7 @@ export default {
     name: "b__hom",
     path: "b/hom",
     redirect: "",
-    component: () => {
-        return import('src/page/Module_b/hom/index.vue')
-    },
+    component: RouterView,
     children: [],
     level: 2,
     meta: {}

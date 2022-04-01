@@ -5,9 +5,7 @@ export default {
     name: "a__config",
     path: "a/config",
     redirect: "/a/config/form",
-    component: () => {
-        return import('src/page/Module_a/config/index.vue')
-    },
+    component: RouterView,
     children: [{
         name: "a__config__form",
         path: "config/form",

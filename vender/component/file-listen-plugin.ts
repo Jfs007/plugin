@@ -5,8 +5,6 @@ import { promiseify } from '../utils/pify';
 import { createRouter } from "../utils/route";
 import Router from "./router";
 import Cache from "./cache";
-
-const util = require('util')
 const fs = require('fs');
 
 export default class FileListenPlugin {
@@ -39,7 +37,6 @@ export default class FileListenPlugin {
         let isWatch = <boolean>(!!changePath.match(new RegExp(`^${include}`)));
         let includePath = path.replace(`${this.cwd}/${this.config.include}/`, '');
         let pathFolder = path.replace(/(.*)\/.*\..*$/ig, "$1");
-        console.log(pathFolder, isWatch, 'files', include, changePath, '-----------', this.cwd);
         if (isWatch && !this.cache.isCache(pathFolder)) {
             let p = `${this.cwd}/${this.config.include}/${includePath.split('/')[0]}`;
             let Files = await this.resolveFiles(p);

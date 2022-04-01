@@ -20,7 +20,9 @@ export default class FileBuilt {
     }
     babelCode(code:string):string {
         let newCode = code.replace(/(import|require)\(.*?\)/g, $ => $.toString());
-        // console.log(newCode, code);
+        // newCode.
+        newCode = newCode.replace(/:\s+([^"|'].*[^"|']?),/g,  (a, value) => { return `: "$var(${value})",`;  })
+        // console.log(newCode, 'newCode');
         return newCode;
     }
 
@@ -37,6 +39,7 @@ export default class FileBuilt {
 
     built(routes, config) {
         let format = config.format;
+       
         routes.map(async route => {
             route = config!.routeRewrite(route) || route;
             if (route.isModule) {
@@ -47,7 +50,7 @@ export default class FileBuilt {
                 let moduleLeft: string = '//文件为插件产生 原则上只允许修改路由参数   \n export default ';
                 let routerVar: object | null = null;
                 try {
-                    if (fs.existsSync(route.filePath + '.' + format)) {
+                    if (fs.existsSync(route.filePath + '.' + format) ) {
                         let fileValue = await readFile(route.filePath + '.' + format);
                         let originCode = fileValue.toString();
                         let leftReg = /([\w\W]*)export\sdefault/;
@@ -55,7 +58,9 @@ export default class FileBuilt {
                         let marginRight = originCode.replace(leftReg, '');
                         let __var = `return ${marginRight || '{}'}`;
                         routerVar = Function(this.babelCode(__var))();
+                        // console.log(routerVar, 'var');
                     }
+                    // console.log(route.name, 'name----')
                     routerVar = routerVar ? config!.routeRewrite(routerVar) : routerVar;
                     route.merge(routerVar || {});
                     moduleLeft = config?.fileLoad(moduleLeft) || moduleLeft;
@@ -64,11 +69,11 @@ export default class FileBuilt {
                     let code = jsBeautify.js(`${moduleLeft}${route.serialize()}`);
                     fs.writeFile(route.filePath + '.' + format, code, () => { });
                 } catch (error) {
-                    
+                    // console.log(error, 'error');
                     return new Error(error)
                 }
             }
-            if (route.isModule && route.children.length) {
+            if ( route.children.length) {
                 this.built(route.children, config);
             }
         })

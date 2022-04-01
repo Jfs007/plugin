@@ -5,9 +5,7 @@ export default {
     name: "hanwang",
     path: "/hanwang",
     redirect: "",
-    component: () => {
-        return import('src/page/hanwang/index.vue')
-    },
+    component: RouterView,
     children: [],
     level: 1,
     meta: {}

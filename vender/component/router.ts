@@ -7,6 +7,7 @@ export type Meta = {
 }
 
 export default class Router extends Base {
+    _id:string;
     name: string;
     path: string;
     redirect: string;
@@ -17,8 +18,10 @@ export default class Router extends Base {
     chunkName: string;
     level: number;
     meta: Meta;
+    fragment: boolean;
     constructor(config) {
         super(config);
+        this._id = '';
         this.name = '';
         this.path = '';
         this.level = 0;
@@ -26,6 +29,7 @@ export default class Router extends Base {
         this.redirect = '';
         this.filePath = '';
         this.children = [];
+        this.fragment = true;
         this.chunkName = '';
         this.meta = <Meta>{};
         this.isModule = false;
@@ -44,13 +48,13 @@ export default class Router extends Base {
     }
 
 
-    search(router: Router): null|Router {
-        return this.children.find(Crouter => (Crouter.name == router.name));
+    search(callback): null|Router {
+        return this.children.find(Crouter => callback(Crouter));
     }
 
 
     get ingoreSerializeKeys() {
-        return ['isModule', 'filePath', 'chunkName'];
+        return ['isModule', 'filePath', 'chunkName', '_id'];
     }
     // get isRouter
 
