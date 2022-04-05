@@ -20,7 +20,7 @@ export class Word {
         let f2 = <boolean>(!!value.match(/^(.*).*=>.*{.*}$/));
         return f1 || f2;
     }
-    typeof(value: string) {
+    typeof(value: string):string {
         if (this.isObject(value)) return 'object';
         if (this.isArray(value)) return 'array';
         if (this.isNumber(value)) return 'number';
@@ -56,7 +56,7 @@ export class Word {
         return keyValues;
     }
 
-    analysis(code) {
+    analysis(code:string):object {
         code = code.trim();
         let _obj = {};
         let clap_string:string = code.replace(/[\n\r]/g, '').match(/^\{(.*)\}$/)[1];
