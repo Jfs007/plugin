@@ -69,6 +69,7 @@ export class Word {
         
         fileds.map(filed => {
             let [key, value] = filed;
+            console.log(value, 'value\n')
             if (this.isArray(value)) {
                 let arrayObjectString:string = value.trim().match(/\[(.*)\]/)[1];
                 if(arrayObjectString) {

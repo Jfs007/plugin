@@ -44,7 +44,7 @@ function Run(config?: ConfigType) : Plugin {
         level: 2,
         meta: {}
     }`);
-    console.log(JSON.stringify(_word), 'word');
+    console.log((_word), 'word');
     return {
         name: 'file-listen',
         
