@@ -32,22 +32,9 @@ export class Word {
 
     }
     scopeMerge(clapArray:Array<string>, ):Array<string> {
-
-        // clapArray.map()
-
-        return [];
-    }
-
-    analysis(code) {
-        code = code.trim();
-        let _obj = {};
-        let clap_string:string = code.replace(/[\n\r]/g, '').match(/^\{(.*)\}$/)[1];
-        if(!clap_string) return _obj;
         let keyValues = [];
         let scopeIdentNum = { '{': 0, '[': 0, '}': 0, ']': 0 };
-       
-        clap_string.split(',').map(keyValue => {
-            
+        clapArray.map(keyValue =>  {
             let scopeIdent = keyValue.match(/\[|\{|\}|\]/g) || [];
             if ((scopeIdentNum['{'] == scopeIdentNum['}'] && scopeIdentNum['['] == scopeIdentNum[']'])) {
                 scopeIdentNum = { '{': 0, '[': 0, '}': 0, ']': 0 };
@@ -62,35 +49,47 @@ export class Word {
             scopeIdent.map(ident => {
                 scopeIdentNum[ident]++;
             });
-
         })
+
+        // clapArray.map()
+
+        return keyValues;
+    }
+
+    analysis(code) {
+        code = code.trim();
+        let _obj = {};
+        let clap_string:string = code.replace(/[\n\r]/g, '').match(/^\{(.*)\}$/)[1];
+        if(!clap_string) return _obj;
+        let keyValues = this.scopeMerge(clap_string.split(','));
         let fileds = keyValues.map((keyValue: string): Array<string> => {
             let [exec, key, value] = <Array<string>>(keyValue.match(/(.*?):(.*)/) || []);
-           
-
             return [key.trim(), value.trim()];
         });
-
+        
         fileds.map(filed => {
             let [key, value] = filed;
             if (this.isArray(value)) {
-                console.log((value.trim()).match(/\[(.*)\]/)[1].split(','), '---match\n\n\n')
-                _obj[key] = (value.trim()).match(/\[(.*)\]/)[1].split(',').map(code => {
-                    return this.analysis(code);
-                });
+                let arrayObjectString:string = value.trim().match(/\[(.*)\]/)[1];
+                if(arrayObjectString) {
+                    _obj[key] = this.scopeMerge(arrayObjectString.split(',')).map(code => {
+                        
+                        return this.analysis(code);
+                    });
+                }else {
+                    _obj[key] = [];
+                }
+            
+                
             }
             else if (this.isObject(value)) {
                 _obj[key] = this.analysis(value);
+            } else if (this.isString(value)){
+                _obj[key] = value;
             } else {
-                _obj[key] = `"${value}"`;
+                _obj[key] = value;
             }
         });
         return _obj;
     }
-
-
-    // let wordAnalysis = (code) => {
-    //     code.match(/([^\s.]*)\s{0,}:\s+(.*)/g)
-    // }
-    // code.match(/([^\s.]*)\s{0,}:\s+(.*)/g)
 }
