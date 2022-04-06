@@ -15,8 +15,21 @@ export default {
         },
         children: [],
         level: 3,
-        meta: {}
+        meta: {},
+        fragment: true
+    }, {
+        name: "a__config__form",
+        path: "config/form",
+        redirect: "",
+        component: () => {
+            return import('src/page/Module_a/config/form/index.vue')
+        },
+        children: [],
+        level: 3,
+        meta: {},
+        fragment: true
     }],
     level: 2,
-    meta: {}
+    meta: {},
+    fragment: true
 }

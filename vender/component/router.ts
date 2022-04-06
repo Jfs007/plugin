@@ -1,17 +1,18 @@
 import Base from "../lib/base";
 import { serialize } from "../utils/serialize";
-
+import { Word } from '../utils/word';
+let word = new Word('');
 export type Meta = {
     icon?: string,
     cache?: boolean
 }
 
 export default class Router extends Base {
-    _id:string;
+    _id: string;
     name: string;
     path: string;
     redirect: string;
-    component: Function|string|void;
+    component: Function | string | void;
     children: Array<Router>;
     isModule: boolean;
     filePath: string;
@@ -36,7 +37,7 @@ export default class Router extends Base {
         super.init(config);
     }
     appendChild(Router: Router) {
-        Router.level = this.level+1;
+        Router.level = this.level + 1;
         this.children.push(Router);
     }
 
@@ -48,7 +49,7 @@ export default class Router extends Base {
     }
 
 
-    search(callback): null|Router {
+    search(callback): null | Router {
         return this.children.find(Crouter => callback(Crouter));
     }
 
@@ -56,56 +57,68 @@ export default class Router extends Base {
     get ingoreSerializeKeys() {
         return ['isModule', 'filePath', 'chunkName', '_id'];
     }
+
+    asType(value: unknown): string {
+        if (typeof value == 'string') {
+            let typeMatch = value.match(/:([^:]*?)$/);
+            let type = typeMatch ? typeMatch[1] : 'string';
+            return type;
+        }
+        return (typeof value).toLowerCase();
+    }
     // get isRouter
 
     toSerializeValue(value, key): any {
-        if(key == 'component') {
-            if(typeof value == 'function') {
-                value = `${value}`;
-            }
-            return value.replace(/\$Function\((.*)\)/g, (a, b) => { return b });
-            
-        }
-        
-        return serialize(value);
+
+
+
+
+        return serialize(value, ({ key, value }) => {
+            let type = this.asType(value);
+            if (type == 'string') { value = `"${value.replace(/(:[^:]*?)$/, '')}"` } else {
+                if(typeof value == 'string') {
+                    value = value.replace(/(:[^:]*?)$/, '').replace(/^["'](.*)["']$/, "$1");
+                }
+                
+            };
+            return { key, value }
+        });
 
     }
-    diff(router:Router, refRouter) {
-        
+    diff(router: Router, refRouter) {
+
 
     }
-    extend(refTarget):Router {
-        for(let key in refTarget) {
-            if(key == 'children') {
+    extend(refTarget): Router {
+        for (let key in refTarget) {
+            if (key == 'children') {
                 let routerChildren = this[key] || [];
                 // 源路由不存在
-                if(!routerChildren.length) {
-                   refTarget[key].map(refRouter => {
-                       this.appendChild(new Router(refRouter));
-                   });
-                   routerChildren = this[key];
+                if (!routerChildren.length) {
+                    refTarget[key].map(refRouter => {
+                        this.appendChild(new Router(refRouter));
+                    });
+                    routerChildren = this[key];
                 }
                 refTarget[key].map(refRouter => {
                     let matchRouter = routerChildren.find(router => router.name == refRouter.name);
-                    if(matchRouter) {
-                       (<Router>matchRouter).extend(refRouter);
-                    }else {
-                       this.appendChild(new Router(refRouter));
+                    if (matchRouter) {
+                        (<Router>matchRouter).extend(refRouter);
+                    } else {
+                        this.appendChild(new Router(refRouter));
                     }
                 })
-            }else {
+            } else {
                 this[key] = refTarget[key];
             }
-            
-            
+
+
         }
         return this;
     }
     merge(mergeRouter) {
-        // 暂时取mergeRourer
-        // return mergeRouter;
         let _merge = (router: Router) => {
-           this.extend(mergeRouter);
+            this.extend(mergeRouter);
         }
         _merge(this);
     }

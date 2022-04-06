@@ -5,6 +5,7 @@ import Router from "../component/router";
 import jsBeautify from 'js-beautify';
 import { promiseify } from "../utils/pify";
 import { ConfigType } from '../types'
+import { Word } from "../utils/word";
 let readFile = promiseify(fs.readFile);
 export default class FileBuilt {
     routes: Array<Router>;
@@ -17,13 +18,6 @@ export default class FileBuilt {
             fs.mkdirSync(moduleFolder);
         }
         this.built(this.routes, config);
-    }
-    babelCode(code:string):string {
-        let newCode = code.replace(/(import|require)\(.*?\)/g, $ => $.toString());
-        // newCode.
-        newCode = newCode.replace(/:\s+([^"|'].*[^"|']?),/g,  (a, value) => { return `: "$var(${value})",`;  })
-        // console.log(newCode, 'newCode');
-        return newCode;
     }
 
     moduleImportMerge(moduleLeft:string, modules:Array<string>):Array<string> {
@@ -56,20 +50,19 @@ export default class FileBuilt {
                         let leftReg = /([\w\W]*)export\sdefault/;
                         moduleLeft = <string>((originCode.match(leftReg))?.[0]) || moduleLeft;
                         let marginRight = originCode.replace(leftReg, '');
-                        let __var = `return ${marginRight || '{}'}`;
-                        routerVar = Function(this.babelCode(__var))();
-                        // console.log(routerVar, 'var');
+                        routerVar = new Word(marginRight).js();
                     }
-                    // console.log(route.name, 'name----')
+                    
                     routerVar = routerVar ? config!.routeRewrite(routerVar) : routerVar;
                     route.merge(routerVar || {});
                     moduleLeft = config?.fileLoad(moduleLeft) || moduleLeft;
                     let _mouduleImport = config.mouduleImport(route) || {};
                     moduleLeft = this.moduleImportMerge(moduleLeft, _mouduleImport).join('\n');
                     let code = jsBeautify.js(`${moduleLeft}${route.serialize()}`);
+
                     fs.writeFile(route.filePath + '.' + format, code, () => { });
                 } catch (error) {
-                    // console.log(error, 'error');
+                    console.log(error, 'error');
                     return new Error(error)
                 }
             }

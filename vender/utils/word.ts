@@ -1,6 +1,20 @@
-export class Word {
-    constructor() {
+import Base from "../lib/base";
 
+type Options = {
+    forceType: boolean;
+}
+export class Word extends Base{
+    code: string;
+    options: Options;
+    constructor(code: string, options?:Options) {
+       
+        super(options);
+        this.code = code;
+        this.options = {
+            forceType: true
+        }
+        super.init(options);
+        // this.forceType = options.
     }
     isObject(value: string): boolean {
         return <boolean>(!!value.trim().match(/^\{.*\}$/))
@@ -16,9 +30,9 @@ export class Word {
     }
 
     isFunction(value: string): boolean {
-        let f1 = <boolean>(!!value.match(/^function(.*).*{.*}$/));
-        let f2 = <boolean>(!!value.match(/^(.*).*=>.*{.*}$/));
-        return f1 || f2;
+        let fun1 = <boolean>(!!value.match(/^function(.*).*{.*}$/));
+        let fun2 = <boolean>(!!value.match(/^(.*).*=>.*{.*}$/));
+        return fun1 || fun2;
     }
     typeof(value: string):string {
         if (this.isObject(value)) return 'object';
@@ -56,7 +70,12 @@ export class Word {
         return keyValues;
     }
 
+    js() {
+        return this.analysis(this.code);
+    }
+
     analysis(code:string):object {
+        let {forceType} = this.options;
         code = code.trim();
         let _obj = {};
         let clap_string:string = code.replace(/[\n\r]/g, '').match(/^\{(.*)\}$/)[1];
@@ -69,6 +88,7 @@ export class Word {
         
         fileds.map(filed => {
             let [key, value] = filed;
+            let _type = this.typeof(value);
             if (this.isArray(value)) {
                 let arrayObjectString:string = value.trim().match(/\[(.*)\]/)[1];
                 if(arrayObjectString) {
@@ -85,9 +105,11 @@ export class Word {
             else if (this.isObject(value)) {
                 _obj[key] = this.analysis(value);
             } else if (this.isString(value)){
-                _obj[key] = value;
+                _obj[key] = forceType ? `${value.replace(/^["'](.*)["']$/, "$1")}:${_type}` : value;
+                // .replace(/^["'](.*)["']$/, "$1")
+
             } else {
-                _obj[key] = value;
+                _obj[key] = forceType ? `${value}:${_type}` : value;
             }
         });
         return _obj;

@@ -5,7 +5,7 @@ import type { Plugin } from 'vite';
 import { Word } from '../utils/word';
 function Run(config?: ConfigType) : Plugin {
     let fileListenPlugin = new FileListenPlugin(config);
-    let _word = new Word().analysis(`{
+    let _word = new Word(`{
         name: "demo__charts",
         path: "demo/charts",
         redirect: "/demo/charts/e-charts",
@@ -43,7 +43,8 @@ function Run(config?: ConfigType) : Plugin {
         }],
         level: 2,
         meta: {}
-    }`);
+    }`).js();
+    console.log(_word, 'wor');
     return {
         name: 'file-listen',
         

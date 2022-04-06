@@ -1,6 +1,6 @@
 
 
-export let serialize = (target: object) => {
+export let serialize = (target: object, callback: Function = ({key, value}) => ({ key, value })) => {
 
     let _serialize = (target): string => {
         let keyGroup = [];
@@ -8,9 +8,7 @@ export let serialize = (target: object) => {
         for (let key in target) {
             if (target.hasOwnProperty(key)) {
                 let value = target[key];
-                if (typeof value == 'string') {
-                    value = `"${value}"`;
-                }
+                
                 if (typeof value == 'object') {
                     if (Array.isArray(value)) {
                         let serializeGroup: Array<unknown> = value.map(target => {
@@ -24,7 +22,12 @@ export let serialize = (target: object) => {
                         keyGroup.push(`${key}:${childrenSerialize}`);
                     }
                 } else {
-                    keyGroup.push(`${key}: ${value}`);
+                    let custom = callback({key, value});
+                    if (typeof custom.value == 'string') {
+                        custom.value = `${custom.value}`;
+                    }
+                    // value = value.replace(/^["'](.*)["']$/, "$1");
+                    keyGroup.push(`${custom.key}: ${custom.value}`);
                 }
 
 
@@ -34,10 +37,13 @@ export let serialize = (target: object) => {
     }
 
     if (typeof target != 'object') {
+        let custom = callback({key: undefined, value: target });
         if(typeof target == 'string') {
-            return `"${target}"`;
+            
+        //    return (<string>target).replace(/^["'](.*)["']$/, "$1");
+            return `${custom.value}`;
         }
-        return target;
+        return custom.value;
     }
     if (Array.isArray(target)) {
         return "[" + target.map(m => _serialize(m)).join(',') + "]"

@@ -15,7 +15,8 @@ export default {
         },
         children: [],
         level: 3,
-        meta: {}
+        meta: {},
+        fragment: true
     }, {
         name: "demo__charts__e-charts",
         path: "charts/e-charts",
@@ -32,11 +33,14 @@ export default {
             },
             children: [],
             level: 4,
-            meta: {}
+            meta: {},
+            fragment: true
         }],
         level: 3,
-        meta: {}
+        meta: {},
+        fragment: true
     }],
     level: 2,
-    meta: {}
+    meta: {},
+    fragment: true
 }

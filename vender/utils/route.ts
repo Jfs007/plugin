@@ -1,5 +1,6 @@
 import { ConfigType } from "../types";
 import Router from "../component/router";
+import { Word } from "./word";
 
 const util = require('util');
 let isRouteModule = (folder: string, config: ConfigType): boolean => { 
@@ -49,7 +50,7 @@ export let createRouter = (files: Array<string>, srcDir: string, config: ConfigT
             });
             router.filePath = filePathDir + routerFolders.join('/');
             router.chunkName = `${config.include}/${folderArray.slice(0, level+1).join('/')}/index.vue`;
-            router.component = `$Function(() => {  return import('${router.chunkName}')  })`
+            router.component = `() => {  return import('${router.chunkName}')  }:function`
             let visAvis = tempVarRouter.search((CRouter) => {
                return CRouter.name == router.name;
             });

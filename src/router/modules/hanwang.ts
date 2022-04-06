@@ -8,5 +8,6 @@ export default {
     component: RouterView,
     children: [],
     level: 1,
-    meta: {}
+    meta: {},
+    fragment: true
 }

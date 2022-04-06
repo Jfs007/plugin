@@ -11,7 +11,7 @@ export default defineConfig({
   plugins: [vue(), hotPlugin({ 
     routeRewrite(route) {
       // console.log(route, 'route');
-      route.component = `RouterView`
+      route.component = `RouterView:var`
       return route;
     },
     mouduleImport(router) {
