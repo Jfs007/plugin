@@ -1,6 +1,6 @@
 {
-  "name": "gen-router",
-  "version": "1.0.0",
+  "name": "vuerouter-build-vite-plugin",
+  "version": "1.0.1",
   "main": "index.js",
   "license": "MIT",
   "devDependencies": {
