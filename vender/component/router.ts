@@ -20,10 +20,8 @@ export default class Router extends Base {
     chunkName: string;
     level: number;
     meta: Meta;
-    fragment: boolean;
     constructor(config) {
         super(config);
-        this._id = '';
         this.name = '';
         this.path = '';
         this.level = 0;
@@ -31,7 +29,6 @@ export default class Router extends Base {
         this.redirect = '';
         this.filePath = '';
         this.children = [];
-        this.fragment = true;
         this.chunkName = '';
         this.meta = <Meta>{};
         this.isModule = false;
@@ -57,7 +54,7 @@ export default class Router extends Base {
 
 
     get ingoreSerializeKeys() {
-        return ['isModule', 'filePath', 'chunkName', '_id', 'fragment'];
+        return ['isModule', 'filePath', 'chunkName', 'level'];
     }
 
     asType(value: unknown): string {
