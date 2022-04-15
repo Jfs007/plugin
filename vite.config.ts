@@ -1,6 +1,8 @@
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
-import hotPlugin from './vender/bin/hot';
+console.log('hotPlugin', '---')
+import hotPlugin from 'vuerouter-build-vite-plugin';
+
 // https://vitejs.dev/config/
 // ceshi
 // gaidong
@@ -16,7 +18,7 @@ export default defineConfig({
       }
       return route;
     },
-    mouduleImport(router) {
+    mouduleImport(route) {
       return ([
         `import RouterView from '/src/App.vue';`,
         `import vfly from '/src/page/Module_a';`

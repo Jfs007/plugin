@@ -8,7 +8,6 @@ export type Meta = {
 }
 
 export default class Router extends Base {
-    _id: string;
     name: string;
     path: string;
     redirect: string;
@@ -98,7 +97,8 @@ export default class Router extends Base {
 
     }
     extend(refTarget, callback:Function, level:number): Router {
-        callback && callback(refTarget, level);
+        refTarget = callback && callback(refTarget, level);
+        if(!refTarget) return;
         for (let key in refTarget) {
             if (key == 'children') {
                 let routerChildren = this[key] || [];

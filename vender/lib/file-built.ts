@@ -54,7 +54,7 @@ export default class FileBuilt {
                         routerVar = new Word(marginRight).js();
                     }
                     route.merge(routerVar || {}, (route, level) => {
-                        config!.routeRewrite(route, level);
+                        return config!.routeRewrite(route, level) || route;
                     });
                     moduleLeft = config?.fileLoad(moduleLeft) || moduleLeft;
                     let _mouduleImport = config.mouduleImport(route) || {};

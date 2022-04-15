@@ -15,6 +15,6 @@
     "node"
   ],
 
-  "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue", "vender/index.js"],
+  "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue", "vender/index.ts", "src/router/index.js"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

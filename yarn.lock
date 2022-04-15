@@ -1077,6 +1077,13 @@ vue@^3.2.25:
     "@vue/server-renderer" "3.2.31"
     "@vue/shared" "3.2.31"
 
+vuerouter-build-vite-plugin@^1.0.4:
+  version "1.0.4"
+  resolved "https://registry.npmjs.org/vuerouter-build-vite-plugin/-/vuerouter-build-vite-plugin-1.0.4.tgz#71316189fbfd47a2e133311eda4f9845a99548e5"
+  integrity sha512-dF+sb27oyNvDpo1TahGCp5wuGxkSQEUx9TUyzSryeKd/yNE7sG1Bucl8Fq3jwkVdqQFo7qo8gFJk5PqEtycl3w==
+  dependencies:
+    js-beautify "^1.14.0"
+
 with@^7.0.0:
   version "7.0.2"
   resolved "https://registry.npmjs.org/with/-/with-7.0.2.tgz#ccee3ad542d25538a7a7a80aad212b9828495bac"
