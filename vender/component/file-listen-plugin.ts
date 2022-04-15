@@ -37,6 +37,7 @@ export default class FileListenPlugin {
         let isWatch = <boolean>(!!changePath.match(new RegExp(`^${include}`)));
         let includePath = path.replace(`${this.cwd}/${this.config.include}/`, '');
         let pathFolder = path.replace(/(.*)\/.*\..*$/ig, "$1");
+        
         if (isWatch && !this.cache.isCache(pathFolder)) {
             let p = `${this.cwd}/${this.config.include}/${includePath.split('/')[0]}`;
             let Files = await this.resolveFiles(p);

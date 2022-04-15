@@ -7,7 +7,7 @@ export default {
     redirect: "",
     component: RouterView,
     children: [],
+    moduleName: "",
     level: 1,
-    meta: {},
-    fragment: true
+    meta: {}
 }

@@ -15,6 +15,21 @@ let routerFolder = (folder: string, config: ConfigType):string => {
    return folder.replace(config.moduleTarget, '');
 }
 
+let getRouteNameGroup = (folderArray: Array<string>, level: number, config: ConfigType) => {
+    let nameGroup = [];
+    folderArray.slice(0, level+1).map(folder => {
+        let _isModule = isModule(folder, config);
+        // 模块只出现一次
+        if(_isModule && level == 0) {
+            nameGroup.push(routerFolder(folder, config));
+        }
+        if(!_isModule) {
+            nameGroup.push(folder)
+        }
+    });
+    return nameGroup;
+}
+
 
 
 export let createRouter = (files: Array<string>, srcDir: string, config: ConfigType) => {
@@ -22,6 +37,8 @@ export let createRouter = (files: Array<string>, srcDir: string, config: ConfigT
         name: '_blank'
     });
     let filePathDir = `${srcDir}/${config.path}/`;
+    
+
     files.map(file => {
         let folderArray: Array<string> = file.replace(`${srcDir}/${config.include}/`, '').split('/');
         let router: Router = new Router({});
@@ -29,23 +46,20 @@ export let createRouter = (files: Array<string>, srcDir: string, config: ConfigT
         let routerFolders: Array<string> = [];
         folderArray.map((folder, level) => {
             routerFolders.push(routerFolder(folder, config));
-
             // 是否为模块
             if(isModule(folder, config)) {
                 folder = routerFolder(folder, config);
-                
                 router.isModule = true;
+                router.moduleName = folder;
             }else {
                 router.isModule = false;
             }
-
-
-
+            let routeNameGroup = getRouteNameGroup(folderArray, level, config);
             let rName = routerFolders.slice(0, level+1).join('__')
-            let rPath = level > 0 ? routerFolders[level-1] + '/' + folder : '/' + folder;
+            let rPath =  (routeNameGroup.length == 1 ? '/' : '') + routeNameGroup.slice(-2).join('/');
             router.init({
+               
                 name: rName,
-                // _id: rName,
                 path: rPath
             });
             router.filePath = filePathDir + routerFolders.join('/');

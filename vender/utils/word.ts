@@ -79,11 +79,11 @@ export class Word extends Base{
         code = code.trim();
         let _obj = {};
         let clap_string:string = code.replace(/[\n\r]/g, '').match(/^\{(.*)\}$/)[1];
-        if(!clap_string) return _obj;
+        if(!clap_string.trim()) return _obj;
         let keyValues = this.scopeMerge(clap_string.split(','));
         let fileds = keyValues.map((keyValue: string): Array<string> => {
             let [exec, key, value] = <Array<string>>(keyValue.match(/(.*?):(.*)/) || []);
-            return [key.trim(), value.trim()];
+            return [(key|| '').trim(), (value||'').trim()];
         });
         
         fileds.map(filed => {

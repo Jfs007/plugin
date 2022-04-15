@@ -31,7 +31,7 @@ export default class FileBuilt {
     
 
 
-    built(routes, config) {
+    built(routes:Array<Router>, config: ConfigType) {
         let format = config.format;
        
         routes.map(async route => {
@@ -40,6 +40,7 @@ export default class FileBuilt {
                 if (!fs.existsSync(route.filePath)) {
                     fs.mkdirSync(route.filePath);
                 }
+                this.built(route.children, config);
             } else {
                 let moduleLeft: string = '//文件为插件产生 原则上只允许修改路由参数   \n export default ';
                 let routerVar: object | null = null;
@@ -52,23 +53,22 @@ export default class FileBuilt {
                         let marginRight = originCode.replace(leftReg, '');
                         routerVar = new Word(marginRight).js();
                     }
-                    
-                    routerVar = routerVar ? config!.routeRewrite(routerVar) : routerVar;
-                    route.merge(routerVar || {});
+                    route.merge(routerVar || {}, (route, level) => {
+                        config!.routeRewrite(route, level);
+                    });
                     moduleLeft = config?.fileLoad(moduleLeft) || moduleLeft;
                     let _mouduleImport = config.mouduleImport(route) || {};
                     moduleLeft = this.moduleImportMerge(moduleLeft, _mouduleImport).join('\n');
                     let code = jsBeautify.js(`${moduleLeft}${route.serialize()}`);
-
                     fs.writeFile(route.filePath + '.' + format, code, () => { });
                 } catch (error) {
                     console.log(error, 'error');
                     return new Error(error)
                 }
             }
-            if ( route.children.length) {
-                this.built(route.children, config);
-            }
+            // if ( route.children.length&&route.isModule) {
+            //     this.built(route.children, config);
+            // }
         })
 
     }

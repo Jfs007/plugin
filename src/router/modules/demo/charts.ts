@@ -3,7 +3,7 @@ import vfly from '/src/page/Module_a';
 //文件为插件产生 原则上只允许修改路由参数   
 export default {
     name: "demo__charts",
-    path: "demo/charts",
+    path: "/charts",
     redirect: "/demo/charts/e-charts",
     component: RouterView,
     children: [{
@@ -14,9 +14,9 @@ export default {
             return import('src/page/Module_demo/charts/baidu-map/index.vue')
         },
         children: [],
+        moduleName: "demo",
         level: 3,
-        meta: {},
-        fragment: true
+        meta: {}
     }, {
         name: "demo__charts__e-charts",
         path: "charts/e-charts",
@@ -32,15 +32,17 @@ export default {
                 return import('src/page/Module_demo/charts/e-charts/map/index.vue')
             },
             children: [],
+            moduleName: "demo",
             level: 4,
-            meta: {},
-            fragment: true
+            meta: {}
         }],
+        moduleName: "demo",
         level: 3,
-        meta: {},
-        fragment: true
+        meta: {
+            t: this('a.b.c')
+        }
     }],
+    moduleName: "demo",
     level: 2,
-    meta: {},
-    fragment: true
+    meta: {}
 }

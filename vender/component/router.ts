@@ -15,6 +15,7 @@ export default class Router extends Base {
     component: Function | string | void;
     children: Array<Router>;
     isModule: boolean;
+    moduleName: string;
     filePath: string;
     chunkName: string;
     level: number;
@@ -34,6 +35,7 @@ export default class Router extends Base {
         this.chunkName = '';
         this.meta = <Meta>{};
         this.isModule = false;
+        this.moduleName = '';
         super.init(config);
     }
     appendChild(Router: Router) {
@@ -55,7 +57,7 @@ export default class Router extends Base {
 
 
     get ingoreSerializeKeys() {
-        return ['isModule', 'filePath', 'chunkName', '_id'];
+        return ['isModule', 'filePath', 'chunkName', '_id', 'fragment'];
     }
 
     asType(value: unknown): string {
@@ -66,9 +68,15 @@ export default class Router extends Base {
         }
         return (typeof value).toLowerCase();
     }
+
+    pureNoType(value:string):string {
+        return value.replace(/(:[^:]*?)$/, '');
+    }
+
+
     // get isRouter
 
-    toSerializeValue(value, key): any {
+    toSerializeValue(value, key?): any {
 
 
 
@@ -85,25 +93,34 @@ export default class Router extends Base {
         });
 
     }
+
+    
+
     diff(router: Router, refRouter) {
 
 
     }
-    extend(refTarget): Router {
+    extend(refTarget, callback:Function, level:number): Router {
+        callback && callback(refTarget, level);
         for (let key in refTarget) {
             if (key == 'children') {
                 let routerChildren = this[key] || [];
-                // 源路由不存在
+                // 文件源路由不存在 用户自己添加的
                 if (!routerChildren.length) {
                     refTarget[key].map(refRouter => {
                         this.appendChild(new Router(refRouter));
                     });
                     routerChildren = this[key];
                 }
+                level++;
                 refTarget[key].map(refRouter => {
-                    let matchRouter = routerChildren.find(router => router.name == refRouter.name);
+                    
+                    let matchRouter = routerChildren.find(router => this.pureNoType(router.name) == this.pureNoType(refRouter.name));
+                   
                     if (matchRouter) {
-                        (<Router>matchRouter).extend(refRouter);
+
+                       
+                        (<Router>matchRouter).extend(refRouter, callback, level);
                     } else {
                         this.appendChild(new Router(refRouter));
                     }
@@ -116,11 +133,12 @@ export default class Router extends Base {
         }
         return this;
     }
-    merge(mergeRouter) {
-        let _merge = (router: Router) => {
-            this.extend(mergeRouter);
+    merge(mergeRouter, callback?:Function) {
+
+        let _merge = (router: Router, level: number) => {
+            this.extend && this.extend(mergeRouter, callback, level);
         }
-        _merge(this);
+        _merge(this, 1);
     }
 
     serialize(): string {
@@ -131,7 +149,13 @@ export default class Router extends Base {
                     let value = this[key];
                     if (key == 'children') {
                         let routerSerializeGroup: Array<string> = value.map(router => {
-                            let serialize: string = router.serialize();
+                            let serialize: string = '';
+
+                            if(!router.serialize) {
+                                router = new Router(router);
+                            }
+                            serialize = router.serialize()
+                            
                             return serialize;
                         });
                         let childrenSerialize: string = `[${routerSerializeGroup.join(',')}]`;
