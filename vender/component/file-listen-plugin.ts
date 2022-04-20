@@ -1,4 +1,4 @@
-import { ConfigType, File, RouteReview } from "../types";
+import { ConfigType, File } from "../types";
 import defaultConfig from "../etc/config";
 import FileBuilt from '../lib/file-built';
 import { promiseify } from '../utils/pify';
@@ -12,7 +12,6 @@ export default class FileListenPlugin {
     cwd: string;
     cache: Cache;
     routers: Array<Router>;
-    routeReview: RouteReview;
     constructor(config: ConfigType) {
         this.cache = new Cache();
         this.routers = [];
@@ -31,19 +30,16 @@ export default class FileListenPlugin {
         this.builtRouter(Files);
     }
     async listen(_file: File) {
-        let { include } = this.config;
+        let { include, includeFilePrefix } = this.config;
         let { path } = _file;
         let changePath = path.replace(`${this.cwd}/`, '');
         let isWatch = <boolean>(!!changePath.match(new RegExp(`^${include}`)));
         let includePath = path.replace(`${this.cwd}/${this.config.include}/`, '');
         let pathFolder = path.replace(/(.*)\/.*\..*$/ig, "$1");
-        
         if (isWatch && !this.cache.isCache(pathFolder)) {
             let p = `${this.cwd}/${this.config.include}/${includePath.split('/')[0]}`;
             let Files = await this.resolveFiles(p);
             Files.unshift(p);
-            
-        
             this.builtRouter(Files);
         }
     }
@@ -85,10 +81,18 @@ export default class FileListenPlugin {
 
     }
     ingore(folderPath) {
+        let { ignoreFilePrefix, includeFilePrefix } = this.config;
         return folderPath.filter(folder => {
             let builtPath = folder.replace(`${this.cwd}/${this.config.include}/`, '');
             return !builtPath.split('/').find(path => {
-                let reg = new RegExp(`^${this.config.ignoreFilePrefix}`);
+                if(includeFilePrefix) {
+                    let reg = new RegExp(`^${includeFilePrefix}`);
+                    let includeTarget = path.match(reg);
+                    if(!includeTarget) {
+                        return true;
+                    }
+                }
+                let reg = new RegExp(`^${ignoreFilePrefix}`);
                 let ingoreTarget = path.match(reg);
                 return <boolean>!!ingoreTarget;
             })

@@ -1,7 +1,7 @@
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 console.log('hotPlugin', '---')
-import hotPlugin from 'vuerouter-build-vite-plugin';
+import vuerouterBuildPlugin from './vender/index';
 
 // https://vitejs.dev/config/
 // ceshi
@@ -10,21 +10,21 @@ import hotPlugin from 'vuerouter-build-vite-plugin';
 // nonoe
 // dev2 content
 export default defineConfig({
-  plugins: [vue(), hotPlugin({ 
+  plugins: [vue(), vuerouterBuildPlugin({ 
+    includeFilePrefix: '_',
     routeRewrite(route, level) {
       // 第一层使用routerView
       if(level == 1) {
-        route.component = `RouterView:var`
+        // route.component = `{  template: '<router-view></router-view>' }:object`
       }
       return route;
     },
     mouduleImport(route) {
       return ([
-        `import RouterView from '/src/App.vue';`,
-        `import vfly from '/src/page/Module_a';`
+        `import RouterView from '/src/RouterView.vue';`,
       ]);
     },
-    fileLoad(left) {
+    fileTopLoad(left) {
       return left;
     }
   })]

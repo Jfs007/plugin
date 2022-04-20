@@ -53,7 +53,7 @@ export default class Router extends Base {
 
 
     get ingoreSerializeKeys() {
-        return ['isModule', 'filePath', 'chunkName', 'level'];
+        return ['isModule', 'filePath', 'chunkName', 'level', 'moduleName'];
     }
 
     asType(value: unknown): string {

@@ -12,7 +12,7 @@ let isModule = (folder: string, config: ConfigType): boolean => {
     return <boolean>!!folder.match(moduleTarget) && <boolean>!!!folder.match(moduleRouterTarget)
 }
 let routerFolder = (folder: string, config: ConfigType):string => {
-   return folder.replace(config.moduleTarget, '');
+   return folder.replace(config.moduleTarget, '').replace(config.includeFilePrefix, '');
 }
 
 let getRouteNameGroup = (folderArray: Array<string>, level: number, config: ConfigType) => {
@@ -24,7 +24,7 @@ let getRouteNameGroup = (folderArray: Array<string>, level: number, config: Conf
             nameGroup.push(routerFolder(folder, config));
         }
         if(!_isModule) {
-            nameGroup.push(folder)
+            nameGroup.push(routerFolder(folder, config))
         }
     });
     return nameGroup;

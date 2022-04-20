@@ -1,42 +1,21 @@
-import RouterView from '/src/App.vue';
-import vfly from '/src/page/Module_a';
+import RouterView from '/src/RouterView.vue';
 //文件为插件产生 原则上只允许修改路由参数   
 export default {
     name: "demo__charts",
     path: "/charts",
-    redirect: "/demo/charts/e-charts",
-    component: RouterView,
+    component: () => {
+        return import('src/page/_Module_demo/_charts/index.vue')
+    },
+    redirect: "/demo/charts/baidu-map",
     children: [{
         name: "demo__charts__baidu-map",
         path: "charts/baidu-map",
+        component: () => {
+            return import('src/page/_Module_demo/_charts/_baidu-map/index.vue')
+        },
         redirect: "",
-        component: () => {
-            return import('src/page/Module_demo/charts/baidu-map/index.vue')
-        },
         children: [],
-        moduleName: "demo",
-        meta: {}
-    }, {
-        name: "demo__charts__e-charts",
-        path: "charts/e-charts",
-        redirect: "/demo/charts/e-charts/map",
-        component: () => {
-            return import('src/page/Module_demo/charts/e-charts/index.vue')
-        },
-        children: [{
-            name: "demo__charts__e-charts__map",
-            path: "e-charts/map",
-            redirect: "",
-            component: () => {
-                return import('src/page/Module_demo/charts/e-charts/map/index.vue')
-            },
-            children: [],
-            moduleName: "demo",
-            meta: {}
-        }],
-        moduleName: "demo",
         meta: {}
     }],
-    moduleName: "demo",
     meta: {}
 }
