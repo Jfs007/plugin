@@ -22,9 +22,13 @@ export type ConfigType = {
  }
 
  export type File = {
-    path: string;
-    root: string;
+    path: string,
+    root: string
     
+}
+
+export type watchOptions = {
+    file: string;
 }
 
 

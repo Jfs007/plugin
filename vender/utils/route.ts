@@ -29,6 +29,14 @@ let getRouteNameGroup = (folderArray: Array<string>, level: number, config: Conf
     });
     return nameGroup;
 }
+let getRouteChunk = (folderArray: Array<string>, level, config: ConfigType,) => {
+    let pathGroup:Array<string> = folderArray.slice(0, level+1);
+    let file = pathGroup[pathGroup.length-1];
+    if(file.match(/.*(\..*)/)) {
+        return `${config.include}/${pathGroup.join('/')}`;
+    }
+    return `${config.include}/${pathGroup.join('/')}/index.vue`;
+}
 
 
 
@@ -45,7 +53,10 @@ export let createRouter = (files: Array<string>, srcDir: string, config: ConfigT
         let tempVarRouter = _blankRouter;
         let routerFolders: Array<string> = [];
         folderArray.map((folder, level) => {
+            // if(folder != 'index') {
             routerFolders.push(routerFolder(folder, config));
+            // }
+            
             // 是否为模块
             if(isModule(folder, config)) {
                 folder = routerFolder(folder, config);
@@ -58,12 +69,11 @@ export let createRouter = (files: Array<string>, srcDir: string, config: ConfigT
             let rName = routerFolders.slice(0, level+1).join('__')
             let rPath =  (routeNameGroup.length == 1 ? '/' : '') + routeNameGroup.slice(-2).join('/');
             router.init({
-               
                 name: rName,
                 path: rPath
             });
             router.filePath = filePathDir + routerFolders.join('/');
-            router.chunkName = `${config.include}/${folderArray.slice(0, level+1).join('/')}/index.vue`;
+            router.chunkName = getRouteChunk(folderArray, level, config);
             router.component = `() => {  return import('${router.chunkName}')  }:function`
             let visAvis = tempVarRouter.search((CRouter) => {
                return CRouter.name == router.name;

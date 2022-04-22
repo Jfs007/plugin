@@ -1,6 +1,5 @@
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
-console.log('hotPlugin', '---')
 import vuerouterBuildPlugin from './vender/index';
 
 // https://vitejs.dev/config/
