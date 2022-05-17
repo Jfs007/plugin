@@ -13,14 +13,14 @@ export default defineConfig({
     includeFilePrefix: '_',
     routeRewrite(route, level) {
       // 第一层使用routerView
-      if(level == 1) {
-        // route.component = `{  template: '<router-view></router-view>' }:object`
+      if(level == 1 && route.children && route.children.length) {
+        route.component = `Layout:var`
       }
       return route;
     },
     mouduleImport(route) {
       return ([
-        `import RouterView from '/src/RouterView.vue';`,
+        `import Layout from '/src/App.vue';`,
       ]);
     },
     fileTopLoad(left) {

@@ -29,6 +29,7 @@ export type ConfigType = {
 
 export type watchOptions = {
     file: string;
+  
 }
 
 

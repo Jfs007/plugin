@@ -129,6 +129,7 @@ export default class FileListenPlugin {
         return Files;
 
     }
+    
     ingore(folderPath) {
         let { ignoreFilePrefix, includeFilePrefix } = this.config;
         return folderPath.filter(folder => {

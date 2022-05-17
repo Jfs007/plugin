@@ -74,7 +74,7 @@ export let createRouter = (files: Array<string>, srcDir: string, config: ConfigT
             });
             router.filePath = filePathDir + routerFolders.join('/');
             router.chunkName = getRouteChunk(folderArray, level, config);
-            router.component = `() => {  return import('${router.chunkName}')  }:function`
+            router.component = `() => {  return import('/${router.chunkName}')  }:function`
             let visAvis = tempVarRouter.search((CRouter) => {
                return CRouter.name == router.name;
             });

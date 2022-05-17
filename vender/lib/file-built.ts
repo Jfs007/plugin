@@ -55,12 +55,12 @@ export default class FileBuilt {
                     }
                 });
 
-                let importModulesString = importModules.map(_ => {
-                    return `import ${_} from './${_}.${format}'`;
-                }).join('\n');
+                // let importModulesString = importModules.map(_ => {
+                //     return `import ${_} from './${_}.${format}'`;
+                // }).join('\n');
 
-                let exportFile = `${importModulesString}\n // 该文件禁止修改  \n export default {   ${importModules.join(',').replace(/^["'](.*)["']$/, "$1")}  }`;
-                fs.writeFile(`${route.filePath}/index.ts`, exportFile, () => { });
+                // let exportFile = `${importModulesString}\n // 该文件禁止修改  \n export default {   ${importModules.join(',').replace(/^["'](.*)["']$/, "$1")}  }`;
+                // fs.writeFile(`${route.filePath}/index.ts`, exportFile, () => { });
 
 
                 this.built(route.children, config);
